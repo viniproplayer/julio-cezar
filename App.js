@@ -1,6 +1,16 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
-
+import {NavigationContainer } from '@react-navigation/native';
+import {createStackNavigator } from '@react-navigation/stack';
+function SettingScreen() {
+  return(
+    <View style={styles.centerContainer}>
+    <Text style={styles.header}>Página de Configurações</Text>
+    <Text>Aqui você pode ajustar as preferências do app.</Text>
+    </View>
+   );
+}
+function HomeScreen({ navigator }) {
 const Data = [
   { id: '1', title: 'Configurações' },
   { id: '2', title: 'Perfil' },
@@ -9,11 +19,18 @@ const Data = [
   { id: '5', title: 'Ajuda' }
 ];
 
-export default function App() {
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.button}
-      onPress={() => alert('Você clicou em: ' + item.title + ', seu pato')}
+      onPress={() => {
+        if (item.id === '1'){
+          //Se for o ID 1,navega para a página de Configurações
+          navigation.navigate('Settings');
+        } else {
+            alert('Você clicou em: ' + item.title + ', seu pato');
+        }
+      }}
     >
       <Text style={styles.buttonText}>{item.title}</Text>
     </TouchableOpacity>
@@ -31,7 +48,11 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
+export default function App() {
+ return(
+   
+ );
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
