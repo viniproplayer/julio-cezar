@@ -1,7 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable, SafeAreaView, Alert } from 'react-native';
 import {NavigationContainer } from '@react-navigation/native';
 import {createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
+
 function SettingScreen() {
   return(
     <View style={styles.centerContainer}>
@@ -10,7 +13,7 @@ function SettingScreen() {
     </View>
    );
 }
-function HomeScreen({ navigator }) {
+function HomeScreen({ navigation }) {
 const Data = [
   { id: '1', title: 'Configurações' },
   { id: '2', title: 'Perfil' },
@@ -21,19 +24,19 @@ const Data = [
 
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity
+    <Pressable
       style={styles.button}
       onPress={() => {
         if (item.id === '1'){
           //Se for o ID 1,navega para a página de Configurações
           navigation.navigate('Settings');
         } else {
-            alert('Você clicou em: ' + item.title + ', seu pato');
+            Alert('Você clicou em: ' + item.title + ', seu pato');
         }
       }}
     >
       <Text style={styles.buttonText}>{item.title}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
@@ -49,8 +52,21 @@ const Data = [
   );
 }
 export default function App() {
- return(
-   
+ return (
+   <NavigationContainer>
+   <Stack.Navigator initialRouteName="Home">
+   <Stack.Screen 
+   name="Home"
+   component={HomeScreen}
+   options={{title: 'Início'}}
+   />
+   <Stack.Screen
+   name="Settings"
+   component={SettingScreen}
+   options={{title:'Configurações'}}
+   />
+   </Stack.Navigator>
+   </NavigationContainer>
  );
 }
 const styles = StyleSheet.create({
@@ -58,6 +74,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+   centerContainer: {
+     flex: 1,
+     justifyContent: 'center',
+     alignItems: 'center',
+     backgroundColor: 'f5f5f5', 
+   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -77,7 +99,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   buttonText: {
-    color: '#fff',
+    color: '#000',
     fontSize: 16,
     fontWeight: '600',
   },
