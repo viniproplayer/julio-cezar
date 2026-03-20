@@ -1,101 +1,105 @@
 import React from 'react';
-import {StylesSheet, Text, View, FlastList Pressable, SafeAreaView, Alert, Platform } from 'react-native';
-import {NavigationContainer } from '@react-navigation/native';
-import {createStackNavigator } from '@react-navigation/stack';
+import { StyleSheet, Text, View, FlatList, Pressable, SafeAreaView, Alert, Platform } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
+// --- Telas de Exemplo ---
 const SettingScreen = () => (
- <View style={styles.centerContainer}>
+  <View style={styles.centerContainer}>
     <Text style={styles.header}>Configurações</Text>
-</View>
+  </View>
 );
 
 const ProfileScreen = () => (
-<View style=[styles.centerContainer}>
+  <View style={styles.centerContainer}>
     <Text style={styles.header}>Meu Perfil</Text>
-</View>
+  </View>
 );
 
+// --- Tela Principal ---
 function HomeScreen({ navigation }) {
+  // Agora cada item sabe para qual "route" deve ir
+  const menuItems = [
+    { id: '1', title: 'Configurações', icon: '⚙️', route: 'Settings' },
+    { id: '2', title: 'Perfil', icon: '👤', route: 'Profile' },
+    { id: '3', title: 'Mensagens', icon: '💬', route: null },
+    { id: '4', title: 'Segurança', icon: '🛡️', route: null },
+  ];
 
-const menuItens = [
-{id: '1', title: 'Configurações', icon: '⚙️', route: 'Settings' },
-{id: '2', title: 'Perfil', icon: '👤', route: 'Profile' },
-{id: '3', title: 'Mensagens', icon: '💬', route: 'null' },
-{id: '4', title: 'Segurança', icon: '🛡️', route: 'null' },
-];
+  const handlePress = (item) => {
+    if (item.route) {
+      navigation.navigate(item.route);
+    } else {
+      Alert.alert('Em breve', `A tela de ${item.title} ainda está em desenvolvimento!`);
+    }
+  };
 
-const handlePress = (item) => {
-  if (item.route) {
-    navigation.navigate(item.route);
-  } else {
-    Alert.alert('Em breve,  `À tela de ${item.title} ainda está em desenvolvimento!`);
-  }
-};
+  const renderItem = ({ item }) => (
+    <Pressable
+      // Efeito de clique elegante
+      style={({ pressed }) => [
+        styles.button,
+        pressed && { opacity: 0.7, transform: [{ scale: 0.98 }] }
+      ]}
+      onPress={() => handlePress(item)}
+    >
+      <Text style={styles.buttonText}>{item.icon} {item.title}</Text>
+      <Text style={styles.arrow}>〉</Text> 
+    </Pressable>
+  );
 
-const renderItem = ({ item }) => (
-<Pressable 
-
-style={({ pressed }) => [
-  styles.button,
-  pressed && { opacity: 0.7, transform: [{ scale: 0.98 }] }
-]}
-onPress={() => handlePress(item)}
->
-  <Text style={styles.buttonText}>{item.icon} {item.title}</Text>
-  <Text style={styles.arrow}>〉 </Text>
-</Pressable>
-);
-return (
-  <SafeAreaView style={styles.container}>
-    <FlastList
-      data={menuItens}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.listPadding}
-      ListHeaderComponent={<Text style={styles.header}>Menu Principal</Text>
-    />
-  </SafeAreaView>
-);
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={menuItems}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listPadding}
+        ListHeaderComponent={<Text style={styles.header}>Menu Principal</Text>}
+      />
+    </SafeAreaView>
+  );
 }
 
-export default function App () {
+// --- App Principal ---
+export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={(
-          headerStyles: { back groundColor: '#00faff' },
-          headerTintColor: '#00',
+      <Stack.Navigator 
+        screenOptions={{
+          headerStyle: { backgroundColor: '#00faff' },
+          headerTintColor: '#000',
           headerTitleStyle: { fontWeight: 'bold' },
         }}
       >
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Início' }} />
-        <Stack.Screen name="Settings" component={SettingScreen options={{ title 'Ajustes' }} />
-        <Stack.Screen name="Profile" component={ProfileScreen} options={{ title ' Perfil' }} />
+        <Stack.Screen name="Settings" component={SettingScreen} options={{ title: 'Ajustes' }} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
-consy style = StylesSheet.create({
-  container: {flex: 1, backgroundColor: '#f8f9fa' },
-  centerContainer: {flex 1, justifyContent: 'center', alignIems: 'center' },
-  header: {fontSize: 28, fontWeight: '800', color: #333', marginVertical:20, paddingHorizontal: 20 },
-  listPadding: {paddingBottom: 20 },
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#f8f9fa' },
+  centerContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  header: { fontSize: 28, fontWeight: '800', color: '#333', marginVertical: 20, paddingHorizontal: 20 },
+  listPadding: { paddingBottom: 20 },
   button: {
     backgroundColor: '#fff',
-    flexDirection: 'row', 
+    flexDirection: 'row', // Alinha ícone e seta
     justifyContent: 'space-between',
     padding: 20,
     marginHorizontal: 20,
-    marginBotton: 12,
+    marginBottom: 12,
     borderRadius: 12,
     ...Platform.select({
-      ios: {shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
+      ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
       android: { elevation: 3 },
-   }),
-},
-buttonText: { fontSize: 18, fontWeight: '500', color: '#444' },
-arrow: {fontSize: 18, color: '#ccc' }
+    }),
+  },
+  buttonText: { fontSize: 18, fontWeight: '500', color: '#444' },
+  arrow: { fontSize: 18, color: '#ccc' }
 });
